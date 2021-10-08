@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Security-Policy">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href='https://do0of8uwbahzz.cloudfront.net/graph.css'>
+        <script src='https://do0of8uwbahzz.cloudfront.net/sfn.js'></script>
+    </head>
+    <body>
+        <input type="file" id="get_the_file">
+        <div id="svgcontainer" class="workflowgraph">
+            <svg></svg>
+        </div>
+        <script type="text/javascript">
+
+          function renderGraph(data) {
+            var element = document.getElementById('svgcontainer');
+            var options = {
+              width: parseFloat(getComputedStyle(element, null).width.replace('px', '')),
+              height: 1000,
+              layout: 'TB', // TB or LR
+              resizeHeight: true,
+            };
+            var definition = JSON.parse(data);
+            var elementId = '#svgcontainer';
+            var graph = new sfn.StateMachineGraph(definition, elementId, options);
+            graph.render();
+          }
+
+          function readFile() {
+            var file_to_read = document.getElementById('get_the_file').files[0];
+            var fileread = new FileReader();
+            fileread.onload = function (e) {
+              renderGraph(e.target.result);
+            };
+            if (file_to_read) {
+              fileread.readAsText(file_to_read);
+              document.getElementById('get_the_file').value = null;
+            }
+          }
+
+          document.getElementById('get_the_file').addEventListener('change', readFile);
+
+        </script>
+    </body>
+</html>
